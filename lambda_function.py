@@ -21,18 +21,38 @@ def getWelcomeResponse():
                     "At your service."
     # If the user either does not reply to the welcome message or says something
     # that is not understood, they will be prompted again with this text.
-    reprompt_text = "You can ask me to train your dog."
+    reprompt_text = "Tell me the name of your dog, and ask to start a training. Ask for help for more information."
     should_end_session = False
     return ah.build_response(session_attributes, ah.build_speechlet_response(
         card_title, speech_output, reprompt_text, should_end_session))
 
 
-def endSession():
+def getDetailedHelp():
+    session_attributes = {}
+    card_title = "Help for Dog trainer"
+    speech_output = "I can make your dog do tricks, but I need your help the first few times. " \
+                    "Go get some treats for the dog, and ask me to start training. " \
+                    "Motivate him to listen to me, by giving him a treat when he follows the commands. " 
+    # If the user either does not reply to the welcome message or says something
+    # that is not understood, they will be prompted again with this text.
+    reprompt_text = "Tell me the name of your dog, and ask to start a training."
+    should_end_session = False
+    return ah.build_response(session_attributes, ah.build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
+
+
+def endSession(session):
+    user = session['user']['userId'] 
+    name = getDogNameFromDynamoDB(user)
+    if not name:
+        name = "you"
+
     card_title = "Session Ended"
     speech_output = "Dog trainer out, have a nice day! "
-    should_end_session = True
+    card_output = "Thanks for using Dog Trainer, I hope {0} had fun!".format(name)
+    should_end_session = False
     return ah.build_response({}, ah.build_speechlet_response(
-        card_title, speech_output, None, should_end_session))
+        card_title, speech_output, None, should_end_session, card_output=card_output))
 
 def setDogNameHandler(intent, session):
     user = session['user']['userId']  # get the userId of the current user
@@ -56,7 +76,7 @@ def setDogNameHandler(intent, session):
 def startTrainingHandler(intent, session):
     user = session['user']['userId']  # get the userId of the current user
     session_attributes = {}
-    should_end_session = True
+    should_end_session = False
     
     dogNameFromIntent = getDogNameFromIntent(intent)
     dogNameFromDynamoDB = getDogNameFromDynamoDB(user)
@@ -146,9 +166,9 @@ def on_intent(intent_request, session):
     elif intent_name == "SetDogNameIntent":
         return setDogNameHandler(intent, session)
     elif intent_name == "AMAZON.HelpIntent":
-        return getWelcomeResponse()
+        return getDetailedHelp()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
-        return endSession()
+        return endSession(session)
     else:
         raise ValueError("Invalid intent")
 
