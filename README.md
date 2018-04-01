@@ -18,9 +18,11 @@ Use Alexa to train your dog. You start by telling the Dog Trainer your dog's nam
 
 4. Create an Amazon Alexa skill.
 
-5. Use language-model.json as language model. Don't forget to build it.
+5. Create a new table called "dognames" in DynamoDB
 
-6. Set the created Lambda as endpoint for the alexa skill.
+6. Use language-model.json as language model. Don't forget to build it.
+
+7. Set the created Lambda as endpoint for the alexa skill.
 
 If your echo is linked with the same account as your development account, you should be able to test on your device already.
 
