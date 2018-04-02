@@ -46,7 +46,7 @@ def endSession(session):
     name = getDogNameFromDynamoDB(user)
     if not name:
         name = "you"
-
+        
     card_title = "Session Ended"
     speech_output = "Dog trainer out, have a nice day! "
     card_output = "Thanks for using Dog Trainer, I hope {0} had fun!".format(name)
@@ -92,7 +92,7 @@ def startTrainingHandler(intent, session):
         saveDogNameForUser(user, dogNameFromIntent)
         dogName = dogNameFromIntent
 
-    reprompt_text = "Which dog should I train?"
+    reprompt_text = "Do you want me to train your dog again?"
     speech_output = """<speak>{0}, come here! <break time="2.0s" />
                     <emphasis level="strong"> Good boy!</emphasis> <break time="1.0s" />
                     {0}, sit! <break time="1.5s" />
