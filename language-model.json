@@ -10,6 +10,9 @@
                 {
                     "name": "AMAZON.HelpIntent",
                     "samples": [
+                        "how does this training work",
+                        "how do you train my dog",
+                        "how do I train my dog",
                         "can you explain how this works",
                         "how does it work",
                         "explain this",
@@ -18,7 +21,6 @@
                         "explain yourself",
                         "I need an explanation",
                         "I don't understand",
-                        "help",
                         "how does this work",
                         "What can I do",
                         "What can I say"
@@ -27,9 +29,11 @@
                 {
                     "name": "AMAZON.StopIntent",
                     "samples": [
+                        "cancel training",
+                        "end training",
+                        "cancel",
                         "abort training",
                         "quite",
-                        "sht",
                         "Stop it",
                         "Stop",
                         "No more",
@@ -57,6 +61,7 @@
                         }
                     ],
                     "samples": [
+                        "keep my dog busy",
                         "start training for {Dog}",
                         "entertain {Dog}",
                         "please train {Dog}",
@@ -101,6 +106,9 @@
                         }
                     ],
                     "samples": [
+                        "That's not my dog",
+                        "My dog is not called like that",
+                        "Rename my dog",
                         "Update name",
                         "New name",
                         "Remember the dog's name",
@@ -115,6 +123,20 @@
                         "His name is {Dog}",
                         "Remember that my dog's name is {Dog}",
                         "My dog is called {Dog}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": [
+                        "ok train",
+                        "yes I want to train",
+                        "yes let's train"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": [
+                        "no don't train"
                     ]
                 }
             ],

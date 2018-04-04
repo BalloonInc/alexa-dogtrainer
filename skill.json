@@ -1,0 +1,58 @@
+{
+  "skillManifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "summary": "Alexa trains your dog. Amaze everyone at parties and show off how your dog follows Alexa's commands.",
+          "examplePhrases": [
+            "Alexa, ask Dog Trainer to train Bobby.",
+            "Alexa, start Dog Trainer.",
+            "Alexa, ask Dog Trainer to keep my dog busy."
+          ],
+          "name": "Dog Trainer",
+          "description": "Dog Trainer for Alexa is a funny and playful way to entertain your dog. Tell the trainer your dog's name, and ask to start a training!\n\nThe trainer will ask the dog to come to him, sit and lay down in front of him.\n\nWe might need your help the first few times, so go get some treats before starting. Make the dog execute the commands I give him, and reward him with a treat when he does so. Repeat three to five times, and we will be good on our own.\n\nGuaranteed to amaze all your friends and family.\n\nLet's get started and woof some fun!"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Sample Testing Instructions.",
+      "category": "PETS_AND_ANIMAL",
+      "keywords":[
+        "train",
+        "pet",
+        "dog",
+        "trainer",
+        "game",
+        "sit",
+        "down",
+        "dog",
+        "whisperer",
+        "dogwhisperer",
+        "dogtrainer",
+        "training",
+        "petfriend",
+        "friend",
+        "activity",
+        "pet"
+      ],
+      "smallIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/APP_ICON.png",
+      "largeIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/APP_ICON_LARGE.png",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:383757231925:function:dogtrainer-alexa:PROD"
+        }
+      }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "usesPersonalInfo": false,
+      "isChildDirected": false,
+      "isExportCompliant": true,
+      "containsAds": false,
+    },
+
+  }
+}
