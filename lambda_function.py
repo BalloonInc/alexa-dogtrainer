@@ -217,7 +217,7 @@ def saveDogNameForUser(dogName, user):
         dog = {
             NUMBER_OF_TRAININGS:0,
             NUMBER_OF_RENAMES:0,
-            PREVIOUS_NAMES:{},
+            PREVIOUS_NAMES:[],
             DOG_NAME:dogName
         }
         return saveDogToDynamoDB(dog, user)

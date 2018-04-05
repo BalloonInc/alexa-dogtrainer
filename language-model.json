@@ -14,6 +14,12 @@
                 {
                     "name": "AMAZON.HelpIntent",
                     "samples": [
+                        "give more info",
+                        "give info",
+                        "I want more info",
+                        "More info",
+                        "Give me more info",
+                        "I need more info",
                         "how does this training work",
                         "how do you train my dog",
                         "how do I train my dog",
