@@ -34,10 +34,11 @@ DEBUG = os.environ['DEBUG']
 DOGS_TABLE = "dogs"
 # fields
 DOG_NAME ="dogName"
+PREVIOUS_NAMES="previous_names"
 NUMBER_OF_TRAININGS = "number_of_trainings"
+NUMBER_OF_RENAMES="number_of_renames"
 CREATED_AT="created_at"
 UPDATED_AT="updated_at"
-NUMBER_OF_RENAMES="number_of_renames"
 
 
 
@@ -128,7 +129,7 @@ def startTrainingHandler(intent, session, confirmed=False):
     if not (dogNameFromIntent or dogFromDynamoDB):
         return ah.build_response(session_attributes, ah.build_speechlet_directive())
     # If it it in the DB, but not in the intent, just get it from the DB
-    elif not dogNameFromIntent:
+    if not dogNameFromIntent:
         dog = dogFromDynamoDB
     # If it is in the intent, use that one and update DB if needed:
     else:
@@ -178,12 +179,14 @@ def endSession(session):
         name = "you"
         
     card_title = "Session Ended"
-    speech_output = "Dog trainer out, have a nice day! "
+    speech_output = """<speak>
+                    Dog trainer <break time="0.1s" /> out, have a nice day!
+                    </speak>"""
     card_output = "Thanks for using Dog Trainer, I hope {0} had fun!".format(name)
     should_end_session = True
 
     return ah.build_response({}, ah.build_speechlet_response(
-        card_title, speech_output, None, should_end_session, card_output=card_output))
+        card_title, speech_output, None, should_end_session, card_output=card_output, ssml=True))
 
 
 
@@ -209,15 +212,24 @@ def getDogNameFromIntent(intent):
 def saveDogNameForUser(dogName, user):
     dog = getDogFromDynamoDB(user)
 
+    # Dog does not yet exist in DB
     if not dog:
         dog = {
             NUMBER_OF_TRAININGS:0,
-            NUMBER_OF_RENAMES:0
+            NUMBER_OF_RENAMES:0,
+            PREVIOUS_NAMES:{},
+            DOG_NAME:dogName
         }
-    else:
+        return saveDogToDynamoDB(dog, user)
+
+    # Name has changed, update
+    if dog[DOG_NAME].lower() != dogName.lower():
         dog[NUMBER_OF_RENAMES] += 1
-    dog[DOG_NAME] = dogName
-    return saveDogToDynamoDB(dog, user)
+        dog[PREVIOUS_NAMES].append(dog[DOG_NAME])
+        dog[DOG_NAME] = dogName
+        return saveDogToDynamoDB(dog, user)
+    # Nothing changed, don't update
+    return dog
 
 
 
@@ -328,7 +340,9 @@ def on_intent(intent_request, session):
         return getDetailedHelp()
     elif intent_name == "AMAZON.YesIntent":
         return routeYesIntent(intent,session)
-    elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent" or intent_name == "AMAZON.NoIntent":
+    elif intent_name == "AMAZON.NoIntent":
+        return routeNoIntent(intent,session)
+    elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
         return endSession(session)
     else:
         raise ValueError("Invalid intent")

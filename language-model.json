@@ -5,7 +5,11 @@
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
-                    "samples": []
+                    "samples": [
+                        "cancel",
+                        "cancel training",
+                        "cancel the training"
+                    ]
                 },
                 {
                     "name": "AMAZON.HelpIntent",
@@ -29,9 +33,8 @@
                 {
                     "name": "AMAZON.StopIntent",
                     "samples": [
-                        "cancel training",
+                        "quite training",
                         "end training",
-                        "cancel",
                         "abort training",
                         "quite",
                         "Stop it",
@@ -39,7 +42,6 @@
                         "No more",
                         "Bye",
                         "That's enough",
-                        "Thank you",
                         "Done",
                         "stop training"
                     ]
@@ -61,6 +63,7 @@
                         }
                     ],
                     "samples": [
+                        "train",
                         "keep my dog busy",
                         "start training for {Dog}",
                         "entertain {Dog}",
