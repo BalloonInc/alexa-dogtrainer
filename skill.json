@@ -34,8 +34,8 @@
         "activity",
         "pet"
       ],
-      "smallIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/APP_ICON.png",
-      "largeIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/APP_ICON_LARGE.png",
+      "smallIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/AppIcon.png",
+      "largeIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/AppIcon-large.png",
       "distributionCountries": []
     },
     "apis": {
