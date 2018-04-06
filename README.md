@@ -4,6 +4,7 @@ Use Alexa to train your dog. You start by telling the Dog Trainer your dog's nam
 
 ## Use on your Alexa device:
 Available in the Alexa store: https://www.amazon.com/gp/product/B07BVJ1G1K
+
 Just log in with your Amazon account and click "Enable Skill".
 
 ## Support
