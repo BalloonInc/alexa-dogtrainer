@@ -1,4 +1,4 @@
-# jenkins-dogtrainer
+# alexa-dogtrainer
 Use Alexa to train your dog. You start by telling the Dog Trainer your dog's name, and train together with the trainer (e.g. by rewarding with a treat).
 
 
