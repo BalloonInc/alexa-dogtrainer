@@ -1,5 +1,5 @@
 # jenkins-dogtrainer
-Use Alexa to train your dog. You start by telling the Dog Trainer your dog's name, and train together with the trainer (e.g. by rewarding with a candy)
+Use Alexa to train your dog. You start by telling the Dog Trainer your dog's name, and train together with the trainer (e.g. by rewarding with a treat).
 
 
 ## Use on your Alexa device:
@@ -16,7 +16,7 @@ For any issues or suggestion, mail <support@ballooninc.be> or create an [issue](
 - An [Amazon AWS account](https://console.aws.amazon.com) (also free)
 - Python 3 on your pc
 
-## How to use
+## How to develop
 
 1. Create an Amazon lambda in Python 3.
 
@@ -34,7 +34,7 @@ For any issues or suggestion, mail <support@ballooninc.be> or create an [issue](
 
 If your echo is linked with the same account as your development account, you should be able to test on your device already.
 
-## For developing
+## Developing tips
 - all `print` statements are written to Amazon's CloudWatch logging. This is very convenient.
 - You can test your lambda with test events. This way you don't need to use a voice controlled device all the time.
-- Setting `should_end_session` in the intents (`lambda_function.py`) ensures your echo session never closes, which is nice for testing purposes.
+- Setting `should_end_session` to `False` in the intents (`lambda_function.py`) ensures your echo session never closes, which is nice for testing purposes.
