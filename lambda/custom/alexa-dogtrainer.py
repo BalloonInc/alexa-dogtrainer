@@ -5,6 +5,8 @@
 #
 # An Alexa Skill to do some amazing stuff.
 
+import sys
+
 import logging
 from datetime import datetime
 from flask import Flask, json, render_template
@@ -144,6 +146,9 @@ def session_ended():
     """
     return statement("")
 
+
+def lambda_handler(event, _context):
+    return ask.run_aws_lambda(event)
 
 if __name__ == '__main__':
     app.run(debug=True)
