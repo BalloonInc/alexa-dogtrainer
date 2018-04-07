@@ -1,151 +1,158 @@
-# coding=utf-8
+"""
+Alexa skill for dog training, to be ran in AWS lambda.
 
-# Dog Trainer
-# By Wouter Devriendt <wouter@ballooninc.be>
-#
-# An Alexa Skill to do some amazing stuff.
+(c) 2018 Balloon Inc. VOF
+Wouter Devriendt
+"""
 
-import sys
+###
+### ------------------ Imports ------------------
+###
 
-import logging
+# General imports
+import os, sys
 from datetime import datetime
+
+# Amazon libraries import
+import boto3
+
+# Flask imports
+sys.path.insert(0, './lib')
+
 from flask import Flask, json, render_template
 from flask_ask import Ask, request, session, question, statement
 
-__author__ = 'Wouter Devriendt'
-__email__ = 'wouter@ballooninc.be'
 
+###
+### ------------------ DEBUG ------------------
+###
+
+DEBUG = os.environ['DEBUG']
+
+
+###
+### ------------------ Constants for the dog table ------------------
+###
+
+# Table name
+DOGS_TABLE = "dogs"
+# fields
+DOG_NAME ="dogName"
+PREVIOUS_NAMES="previous_names"
+NUMBER_OF_TRAININGS = "number_of_trainings"
+NUMBER_OF_RENAMES="number_of_renames"
+CREATED_AT="created_at"
+UPDATED_AT="updated_at"
+
+
+###
+### ------------------ Constants for last_question session attribute ------------------
+###
+
+# Key
+LAST_QUESTION = "last_question"
+# Values
+NOTHING = 0
+SHOULD_START_TRAINING = 1
+TRAINING_CONFIRMATION = 2
+MALE_OR_FEMALE = 3
+
+
+
+###
+### --------------- DynamoDB Init and Flask Init ------------------
+###
+
+dynamodb = boto3.resource('dynamodb')
+dogs_table = dynamodb.Table(DOGS_TABLE)
 
 app = Flask(__name__)
 ask = Ask(app, '/')
-logging.getLogger("flask_ask").setLevel(logging.DEBUG)
 
-# Session starter
+
 #
-# This intent is fired automatically at the point of launch (= when the session starts).
-# Use it to register a state machine for things you want to keep track of, such as what the last intent was, so as to be
-# able to give contextual help.
+# Session management
+#
 
 @ask.on_session_started
 def start_session():
     """
     Fired at the start of the session, this is a great place to initialise state variables and the like.
     """
-    logging.debug("Session started at {}".format(datetime.now().isoformat()))
+    print("Session started at {}".format(datetime.now().isoformat()))
 
-# Launch intent
-#
-# This intent is fired automatically at the point of launch.
-# Use it as a way to introduce your Skill and say hello to the user. If you envisage your Skill to work using the
-# one-shot paradigm (i.e. the invocation statement contains all the parameters that are required for returning the
-# result
+@ask.session_ended
+def session_ended():
+    return statement("")
 
 @ask.launch
 def handle_launch():
-    """
-    (QUESTION) Responds to the launch of the Skill with a welcome statement and a card.
-
-    Templates:
-    * Initial statement: 'welcome'
-    * Reprompt statement: 'welcome_re'
-    * Card title: 'Dog Trainer
-    * Card body: 'welcome_card'
-    """
-
     welcome_text = render_template('welcome')
     welcome_re_text = render_template('welcome_re')
     welcome_card_text = render_template('welcome_card')
 
-    return question(welcome_text).reprompt(welcome_re_text).standard_card(title="Dog Trainer",
-                                                                          text=welcome_card_text)
+    return question(welcome_text).reprompt(welcome_re_text).standard_card(title="Dog Trainer",                                                                        text=welcome_card_text)
 
-
-# Built-in intents
 #
-# These intents are built-in intents. Conveniently, built-in intents do not need you to define utterances, so you can
-# use them straight out of the box. Depending on whether you wish to implement these in your application, you may keep
-# or delete them/comment them out.
+# Intents
 #
-# More about built-in intents: http://d.pr/KKyx
 
 @ask.intent('AMAZON.StopIntent')
 def handle_stop():
-    """
-    (STATEMENT) Handles the 'stop' built-in intention.
-    """
     farewell_text = render_template('stop_bye')
     return statement(farewell_text)
 
 
 @ask.intent('AMAZON.CancelIntent')
 def handle_cancel():
-    """
-    (STATEMENT) Handles the 'cancel' built-in intention.
-    """
     farewell_text = render_template('cancel_bye')
     return statement(farewell_text)
 
-
 @ask.intent('AMAZON.HelpIntent')
 def handle_help():
-    """
-    (QUESTION) Handles the 'help' built-in intention.
-
-    You can provide context-specific help here by rendering templates conditional on the help referrer.
-    """
-
     help_text = render_template('help_text')
-    return question(help_text)
-
+    return question(help_text).simple_card('Hello', speech_text)
 
 @ask.intent('AMAZON.NoIntent')
 def handle_no():
-    """
-    (?) Handles the 'no' built-in intention.
-    """
     pass
 
 @ask.intent('AMAZON.YesIntent')
 def handle_yes():
-    """
-    (?) Handles the 'yes'  built-in intention.
-    """
     pass
 
+###
+### --------------- DB Getters and setters --------------- 
+###
 
-@ask.intent('AMAZON.PreviousIntent')
-def handle_back():
-    """
-    (?) Handles the 'go back!'  built-in intention.
-    """
-    pass
-
-@ask.intent('AMAZON.StartOverIntent')
-def start_over():
-    """
-    (QUESTION) Handles the 'start over!'  built-in intention.
-    """
-    pass
+def getDogFromDynamoDB(user):
+    try:
+        response = dogs_table.get_item(Key={ 'account': user })
+        return response['Item']['dog']
+    except Exception as e:
+        print("exception while getting dog: ")
+        print(e)
+        return None
 
 
-# Ending session
-#
-# This intention ends the session.
+def saveDogToDynamoDB(dog, user):
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-@ask.session_ended
-def session_ended():
-    """
-    Returns an empty for `session_ended`.
+    if not CREATED_AT in dog:
+        dog[CREATED_AT] = now
+    dog[UPDATED_AT] = now
 
-    .. warning::
+    try:
+        dogs_table.put_item(Item={'account':user,'dog':dog })
+        return dog
+    except Exception as e:
+        print("exception while saving dog: ")
+        print(e)
+        return None
 
-    The status of this is somewhat controversial. The `official documentation`_ states that you cannot return a response
-    to ``SessionEndedRequest``. However, if it only returns a ``200/OK``, the quit utterance (which is a default test
-    utterance!) will return an error and the skill will not validate.
-
-    """
-    return statement("")
-
+# 
+# Main handler: lambda_handler for lambda, app.run for debugging
+# 
 
 def lambda_handler(event, _context):
     return ask.run_aws_lambda(event)
