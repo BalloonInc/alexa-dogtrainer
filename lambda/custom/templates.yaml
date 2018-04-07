@@ -1,0 +1,17 @@
+welcome: |
+  This is your dog trainer. Ask me to start the training, or ask for more info.
+
+welcome_re: |
+  Can I start the training?
+
+welcome_card: |
+  This is your dog trainer. Ask me to start the training, or ask for more info.
+
+stop_bye: |
+  Dog trainer out, have a nice day!
+
+cancel_bye: |
+  OK, goodbye!
+
+help_text: |
+  I can make your dog do tricks, but I need your help the first few times. Go get some treats for the dog, and ask me to start training.
