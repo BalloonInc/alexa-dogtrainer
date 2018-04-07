@@ -22,21 +22,25 @@ See [here](https://developer.amazon.com/blogs/post/Tx14R0IYYGH3SKT/Flask-Ask-A-N
 
 1. Create an Amazon lambda in Python 3.
 
-2. Run `pip install -r flask-ask -t lambda/custom/lib` to install all necessary libs locally.
+2. Create an Amazon Alexa skill.
 
-2. Create a zip of the content of this folder (Python files)
-
-3. Upload the zip file as content of the lambda.
-
-4. Create an Amazon Alexa skill.
+4. Use language-model.json as language model. Don't forget to build it.
 
 5. Create a new table called "dognames" in DynamoDB
 
-6. Use language-model.json as language model. Don't forget to build it.
+6.a. For running locally (ngrok):
+`pip install -r flask-ask`
 
-7. Set the created Lambda as endpoint for the alexa skill.
+6.b. for deploying
+Run `pip install -r flask-ask -t lambda/custom/lib` (see section "Deployment when not on a linux machine).
 
-8. Optional: automate this process with [aws-cli](https://aws.amazon.com/cli‎) and [ask-cli](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html). The folder structure of this project is in such a way that you can just run `ask deploy` after linking both your AWS and AVS accounts.
+7. Create a zip of the content of this folder (Python files)
+
+8. Upload the zip file as content of the lambda.
+
+9. Set the created Lambda as endpoint for the alexa skill.
+
+10. Optional: automate this process with [aws-cli](https://aws.amazon.com/cli‎) and [ask-cli](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html). The folder structure of this project is in such a way that you can just run `ask deploy` after linking both your AWS and AVS accounts.
 
 If your echo is linked with the same account as your development account, you should be able to test on your device already.
 
