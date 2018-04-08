@@ -191,6 +191,8 @@
             }
           ],
           "samples": [
+            "She's a {Sex} dog",
+            "He's a {Sex} dog",
             "she is a {Sex}",
             "he is a {Sex}",
             "she is {Sex}",
