@@ -29,7 +29,7 @@
           ],
           "name": "Dog Trainer",
           "smallIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/AppIcon.png",
-          "description": "Dog Trainer for Alexa is a funny and playful way to entertain your dog. Tell the trainer your dog's name, and ask to start a training!\n\nThe trainer will ask the dog to come to him, sit and lay down in front of him.\n\nWe might need your help the first few times, so go get some treats before starting. Make the dog execute the commands I give him, and reward him with a treat when he does so. Repeat three to five times, and we will be good on our own.\n\nGuaranteed to amaze all your friends and family.\n\nLet's get started and woof some fun!",
+          "description": "Dog Trainer for Alexa is a funny and playful way to entertain your dog. Tell the trainer your dog's name, and ask to start a training!\n\nThe trainer will ask the dog to come to him, sit and lay down in front of him.\n\nWe might need your help the first few times, so go get some treats before starting. Make the dog execute the commands I give him, and reward him with a treat when he does so. Repeat three to five times, and we will be good on our own.\n\nGuaranteed to amaze all your friends and family.\n\nDog Trainer for Alexa is open source software, the source can be found here: https://github.com/BalloonInc/alexa-dogtrainer\n\nFor any suggestions or issues, send us an e-mail on support@ballooninc.be, or create a Github issue.\n\nLet's get started and woof some fun!",
           "largeIconUri": "https://raw.githubusercontent.com/BalloonInc/alexa-dogtrainer/master/AppIcon-large.png"
         }
       },
