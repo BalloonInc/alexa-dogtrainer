@@ -4,14 +4,102 @@ welcome: |
 welcome_re: |
   Can I start the training?
 
-welcome_card: |
+welcome_card_title: |
+  Welcome to Dog Trainer
+
+welcome_card_content: |
   This is your dog trainer. Ask me to start the training, or ask for more info.
 
-stop_bye: |
-  Dog trainer out, have a nice day!
+stop: |
+  <speak>
+    Dog trainer <break time="0.05s"/> out, have a nice day!
+  </speak>
 
-cancel_bye: |
-  OK, goodbye!
+stop_card_title: |
+  Goodbye{{ someone }}!
+
+stop_card_content: |
+  Thanks for using Dog Trainer, I hope {{ name }} had fun!
 
 help_text: |
   I can make your dog do tricks, but I need your help the first few times. Go get some treats for the dog, and ask me to start training.
+
+help_card_title: |
+  Help
+
+dog_name: |
+  What's your dog's name?
+
+dog_name_set: |
+  I'll remember that your dog is called {{ dog }}. Hi, {{ dog }}! Should I start training now?
+
+dog_name_set_card_title: |
+  Hi, {{ dog }}!
+
+dog_name_set_card_content: |
+  I'll remember that {{ dog }} is my new training buddy.
+
+should_start_training: |
+  Should I start a training session now?
+
+want_start_training: |
+  Do you want to start training now?
+
+ready_to_start_training: |
+  Are you ready to start the training?
+
+training_confirmation: |
+  <speak>
+    Lets get started. 
+    Take your treats, motivate {{ dog }} to listen to me, 
+    by giving him a treat when he follows the commands. 
+    Ready to start?
+  </speak>
+
+training_confirmation_card_title: |
+  Prepare Training
+
+training_confirmation_card_content: |
+  Let's get started. Take your treats, and give {{ dog }} one everytime a command is executed correctly.
+
+training: |
+  <speak>
+    {{ dog }}, come here! 
+    <break time="2.0s"/>
+    <emphasis level="strong"> 
+      Good {{ sex }}!
+    </emphasis> 
+    <break time="1.0s"/>
+    {{ dog }}, sit! 
+    <break time="1.5s"/>
+    Good {{ sex }}! 
+    <break time="1.0s"/>
+    {{ dog }}, down! 
+    <break time="1.5s"/>
+    <emphasis level="strong">
+      Good dog! 
+      <break time="0.2s"/> 
+      Good {{ sex }}.
+    </emphasis> 
+    <break time="0.3s"/> 
+    That concludes the training session. 
+    Should we train again?
+  </speak>
+
+training_card_title: |
+  Training...
+
+training_card_content: |
+  {{ dog }} trained: Come, Sit, Down!
+
+train_again: |
+  Do you want me to train your dog again?
+
+you: |
+  you
+
+boy: |
+  boy
+
+girl: |
+  girl

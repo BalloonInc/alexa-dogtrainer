@@ -1,738 +1,748 @@
 {
-  "interactionModel": {
-    "languageModel": {
-      "invocationName": "dog trainer",
-      "intents": [
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": [
-            "cancel",
-            "cancel training",
-            "cancel the training"
-          ]
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": [
-            "give more info",
-            "give info",
-            "I want more info",
-            "More info",
-            "Give me more info",
-            "I need more info",
-            "how does this training work",
-            "how do you train my dog",
-            "how do I train my dog",
-            "can you explain how this works",
-            "how does it work",
-            "explain this",
-            "what can you do",
-            "explain please",
-            "explain yourself",
-            "I need an explanation",
-            "I don't understand",
-            "how does this work",
-            "What can I do",
-            "What can I say"
-          ]
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": [
-            "quite training",
-            "end training",
-            "abort training",
-            "quite",
-            "Stop it",
-            "Stop",
-            "No more",
-            "Bye",
-            "That's enough",
-            "Done",
-            "stop training"
-          ]
-        },
-        {
-          "name": "StartTrainingIntent",
-          "slots": [
+   "interactionModel":{
+      "languageModel":{
+         "invocationName":"dog trainer",
+         "intents":[
             {
-              "name": "Dog",
-              "type": "AMAZON.Person",
-              "samples": [
-                "her name is {Dog}",
-                "his name is {Dog}",
-                "it's {Dog}",
-                "please train {Dog}",
-                "{Dog}",
-                "You should train {Dog}"
-              ]
+               "name":"AMAZON.CancelIntent",
+               "samples":[
+                  "cancel",
+                  "cancel training",
+                  "cancel the training"
+               ]
+            },
+            {
+               "name":"AMAZON.HelpIntent",
+               "samples":[
+                  "give more info",
+                  "give info",
+                  "I want more info",
+                  "More info",
+                  "Give me more info",
+                  "I need more info",
+                  "how does this training work",
+                  "how do you train my dog",
+                  "how do I train my dog",
+                  "can you explain how this works",
+                  "how does it work",
+                  "explain this",
+                  "what can you do",
+                  "explain please",
+                  "explain yourself",
+                  "I need an explanation",
+                  "I don't understand",
+                  "how does this work",
+                  "What can I do",
+                  "What can I say"
+               ]
+            },
+            {
+               "name":"AMAZON.StopIntent",
+               "samples":[
+                  "quite training",
+                  "end training",
+                  "abort training",
+                  "quite",
+                  "Stop it",
+                  "Stop",
+                  "No more",
+                  "Bye",
+                  "That's enough",
+                  "Done",
+                  "stop training"
+               ]
+            },
+            {
+               "name":"StartTrainingIntent",
+               "slots":[
+                  {
+                     "name":"Dog",
+                     "type":"AMAZON.Person",
+                     "samples":[
+                        "her name is {Dog}",
+                        "his name is {Dog}",
+                        "it's {Dog}",
+                        "please train {Dog}",
+                        "{Dog}",
+                        "You should train {Dog}"
+                     ]
+                  }
+               ],
+               "samples":[
+                  "train",
+                  "keep my dog busy",
+                  "start training for {Dog}",
+                  "entertain {Dog}",
+                  "please train {Dog}",
+                  "start training of {Dog}",
+                  "keep {Dog} busy",
+                  "start {Dog}  training",
+                  "start training {Dog}",
+                  "train {Dog}",
+                  "train dog",
+                  "start the dog's training",
+                  "start training of the dog",
+                  "start training",
+                  "start the training of the dog",
+                  "train my doggie",
+                  "train the dog",
+                  "entertain the dog",
+                  "keep the dog busy",
+                  "please educate my dog",
+                  "let's do it",
+                  "start",
+                  "start the training",
+                  "Train my dog"
+               ]
+            },
+            {
+               "name":"SetDogNameIntent",
+               "slots":[
+                  {
+                     "name":"Dog",
+                     "type":"AMAZON.Person",
+                     "samples":[
+                        "{Dog} is the name",
+                        "We named her {Dog}",
+                        "We named him {Dog}",
+                        "She is called {Dog}",
+                        "He is called {Dog}",
+                        "The name is {Dog}",
+                        "Her name is {Dog}",
+                        "His name is {Dog}",
+                        "{Dog}"
+                     ]
+                  }
+               ],
+               "samples":[
+                  "update dog name",
+                  "change dog name",
+                  "change name",
+                  "set dog name",
+                  "That's not my dog",
+                  "My dog is not called like that",
+                  "Rename my dog",
+                  "Update name",
+                  "New name",
+                  "Remember the dog's name",
+                  "Change the name",
+                  "Set a new name",
+                  "Set my dog's name",
+                  "We call her {Dog}",
+                  "We call him {Dog}",
+                  "He is called {Dog}",
+                  "she is called {Dog}",
+                  "Her name is {Dog}",
+                  "His name is {Dog}",
+                  "Remember that my dog's name is {Dog}",
+                  "My dog is called {Dog}"
+               ]
+            },
+            {
+               "name":"AMAZON.YesIntent",
+               "samples":[
+                  "ok train",
+                  "yes I want to train",
+                  "yes let's train"
+               ]
+            },
+            {
+               "name":"AMAZON.NoIntent",
+               "samples":[
+                  "no don't train"
+               ]
             }
-          ],
-          "samples": [
-            "train",
-            "keep my dog busy",
-            "start training for {Dog}",
-            "entertain {Dog}",
-            "please train {Dog}",
-            "start training of {Dog}",
-            "keep {Dog} busy",
-            "start {Dog}  training",
-            "start training {Dog}",
-            "train {Dog}",
-            "train dog",
-            "start the dog's training",
-            "start training of the dog",
-            "start training",
-            "start the training of the dog",
-            "train my doggie",
-            "train the dog",
-            "entertain the dog",
-            "keep the dog busy",
-            "please educate my dog",
-            "let's do it",
-            "start",
-            "start the training",
-            "Train my dog"
-          ]
-        },
-        {
-          "name": "SetDogNameIntent",
-          "slots": [
+         ],
+         "types":[
             {
-              "name": "Dog",
-              "type": "AMAZON.Person",
-              "samples": [
-                "{Dog} is the name",
-                "We named her {Dog}",
-                "We named him {Dog}",
-                "She is called {Dog}",
-                "He is called {Dog}",
-                "The name is {Dog}",
-                "Her name is {Dog}",
-                "His name is {Dog}",
-                "{Dog}"
-              ]
+               "name":"AMAZON.Person",
+               "values":[
+                  {
+                     "name":{
+                        "value":"Bella"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Max"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lucy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Charlie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Molly"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Buddy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Daisy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Rocky"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Maggie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Jake"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sophie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Jack"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sadie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Toby"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Chloe"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Cody"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Bailey"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Buster"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lola"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Duke"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Zoe"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Cooper"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Abby"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Riley"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Ginger"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Harley"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Roxy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Bear"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Gracie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Tucker"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Coco"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Murphy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sasha"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lucky"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lily"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Oliver"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Angel"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sam"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Princess"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Oscar"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Emma"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Teddy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Annie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Winston"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Rosie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sammy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Ruby"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Rusty"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lady"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Shadow"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Missy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Gizmo"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lilly"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Bentley"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Mia"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Zeus"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Katie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Jackson"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Zoey"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Baxter"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Madison"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Bandit"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Stella"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Gus"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Penny"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Samson"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Belle"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Milo"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Rudy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Samantha"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Louie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Holly"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Hunter"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lexi"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Casey"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Lulu"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Rocco"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Brandy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sparky"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Jasmine"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Joey"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Shelby"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Bruno"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Sandy"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Beau"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Roxie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Dakota"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Pepper"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Maximus"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Heidi"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Romeo"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Luna"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Boomer"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Dixie"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Luke"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Honey"
+                     }
+                  },
+                  {
+                     "name":{
+                        "value":"Henry"
+                     }
+                  }
+               ]
             }
-          ],
-          "samples": [
-            "That's not my dog",
-            "My dog is not called like that",
-            "Rename my dog",
-            "Update name",
-            "New name",
-            "Remember the dog's name",
-            "Change the name",
-            "Set a new name",
-            "Set my dog's name",
-            "We call her {Dog}",
-            "We call him {Dog}",
-            "He is called {Dog}",
-            "she is called {Dog}",
-            "Her name is {Dog}",
-            "His name is {Dog}",
-            "Remember that my dog's name is {Dog}",
-            "My dog is called {Dog}"
-          ]
-        },
-        {
-          "name": "AMAZON.YesIntent",
-          "samples": [
-            "ok train",
-            "yes I want to train",
-            "yes let's train"
-          ]
-        },
-        {
-          "name": "AMAZON.NoIntent",
-          "samples": [
-            "no don't train"
-          ]
-        }
-      ],
-      "types": [
-        {
-          "values": [
-            {
-              "name": {
-                "value": "Bella"
-              }
-            },
-            {
-              "name": {
-                "value": "Max"
-              }
-            },
-            {
-              "name": {
-                "value": "Lucy"
-              }
-            },
-            {
-              "name": {
-                "value": "Charlie"
-              }
-            },
-            {
-              "name": {
-                "value": "Molly"
-              }
-            },
-            {
-              "name": {
-                "value": "Buddy"
-              }
-            },
-            {
-              "name": {
-                "value": "Daisy"
-              }
-            },
-            {
-              "name": {
-                "value": "Rocky"
-              }
-            },
-            {
-              "name": {
-                "value": "Maggie"
-              }
-            },
-            {
-              "name": {
-                "value": "Jake"
-              }
-            },
-            {
-              "name": {
-                "value": "Sophie"
-              }
-            },
-            {
-              "name": {
-                "value": "Jack"
-              }
-            },
-            {
-              "name": {
-                "value": "Sadie"
-              }
-            },
-            {
-              "name": {
-                "value": "Toby"
-              }
-            },
-            {
-              "name": {
-                "value": "Chloe"
-              }
-            },
-            {
-              "name": {
-                "value": "Cody"
-              }
-            },
-            {
-              "name": {
-                "value": "Bailey"
-              }
-            },
-            {
-              "name": {
-                "value": "Buster"
-              }
-            },
-            {
-              "name": {
-                "value": "Lola"
-              }
-            },
-            {
-              "name": {
-                "value": "Duke"
-              }
-            },
-            {
-              "name": {
-                "value": "Zoe"
-              }
-            },
-            {
-              "name": {
-                "value": "Cooper"
-              }
-            },
-            {
-              "name": {
-                "value": "Abby"
-              }
-            },
-            {
-              "name": {
-                "value": "Riley"
-              }
-            },
-            {
-              "name": {
-                "value": "Ginger"
-              }
-            },
-            {
-              "name": {
-                "value": "Harley"
-              }
-            },
-            {
-              "name": {
-                "value": "Roxy"
-              }
-            },
-            {
-              "name": {
-                "value": "Bear"
-              }
-            },
-            {
-              "name": {
-                "value": "Gracie"
-              }
-            },
-            {
-              "name": {
-                "value": "Tucker"
-              }
-            },
-            {
-              "name": {
-                "value": "Coco"
-              }
-            },
-            {
-              "name": {
-                "value": "Murphy"
-              }
-            },
-            {
-              "name": {
-                "value": "Sasha"
-              }
-            },
-            {
-              "name": {
-                "value": "Lucky"
-              }
-            },
-            {
-              "name": {
-                "value": "Lily"
-              }
-            },
-            {
-              "name": {
-                "value": "Oliver"
-              }
-            },
-            {
-              "name": {
-                "value": "Angel"
-              }
-            },
-            {
-              "name": {
-                "value": "Sam"
-              }
-            },
-            {
-              "name": {
-                "value": "Princess"
-              }
-            },
-            {
-              "name": {
-                "value": "Oscar"
-              }
-            },
-            {
-              "name": {
-                "value": "Emma"
-              }
-            },
-            {
-              "name": {
-                "value": "Teddy"
-              }
-            },
-            {
-              "name": {
-                "value": "Annie"
-              }
-            },
-            {
-              "name": {
-                "value": "Winston"
-              }
-            },
-            {
-              "name": {
-                "value": "Rosie"
-              }
-            },
-            {
-              "name": {
-                "value": "Sammy"
-              }
-            },
-            {
-              "name": {
-                "value": "Ruby"
-              }
-            },
-            {
-              "name": {
-                "value": "Rusty"
-              }
-            },
-            {
-              "name": {
-                "value": "Lady"
-              }
-            },
-            {
-              "name": {
-                "value": "Shadow"
-              }
-            },
-            {
-              "name": {
-                "value": "Missy"
-              }
-            },
-            {
-              "name": {
-                "value": "Gizmo"
-              }
-            },
-            {
-              "name": {
-                "value": "Lilly"
-              }
-            },
-            {
-              "name": {
-                "value": "Bentley"
-              }
-            },
-            {
-              "name": {
-                "value": "Mia"
-              }
-            },
-            {
-              "name": {
-                "value": "Zeus"
-              }
-            },
-            {
-              "name": {
-                "value": "Katie"
-              }
-            },
-            {
-              "name": {
-                "value": "Jackson"
-              }
-            },
-            {
-              "name": {
-                "value": "Zoey"
-              }
-            },
-            {
-              "name": {
-                "value": "Baxter"
-              }
-            },
-            {
-              "name": {
-                "value": "Madison"
-              }
-            },
-            {
-              "name": {
-                "value": "Bandit"
-              }
-            },
-            {
-              "name": {
-                "value": "Stella"
-              }
-            },
-            {
-              "name": {
-                "value": "Gus"
-              }
-            },
-            {
-              "name": {
-                "value": "Penny"
-              }
-            },
-            {
-              "name": {
-                "value": "Samson"
-              }
-            },
-            {
-              "name": {
-                "value": "Belle"
-              }
-            },
-            {
-              "name": {
-                "value": "Milo"
-              }
-            },
-            {
-              "name": {
-                "value": "Rudy"
-              }
-            },
-            {
-              "name": {
-                "value": "Samantha"
-              }
-            },
-            {
-              "name": {
-                "value": "Louie"
-              }
-            },
-            {
-              "name": {
-                "value": "Holly"
-              }
-            },
-            {
-              "name": {
-                "value": "Hunter"
-              }
-            },
-            {
-              "name": {
-                "value": "Lexi"
-              }
-            },
-            {
-              "name": {
-                "value": "Casey"
-              }
-            },
-            {
-              "name": {
-                "value": "Lulu"
-              }
-            },
-            {
-              "name": {
-                "value": "Rocco"
-              }
-            },
-            {
-              "name": {
-                "value": "Brandy"
-              }
-            },
-            {
-              "name": {
-                "value": "Sparky"
-              }
-            },
-            {
-              "name": {
-                "value": "Jasmine"
-              }
-            },
-            {
-              "name": {
-                "value": "Joey"
-              }
-            },
-            {
-              "name": {
-                "value": "Shelby"
-              }
-            },
-            {
-              "name": {
-                "value": "Bruno"
-              }
-            },
-            {
-              "name": {
-                "value": "Sandy"
-              }
-            },
-            {
-              "name": {
-                "value": "Beau"
-              }
-            },
-            {
-              "name": {
-                "value": "Roxie"
-              }
-            },
-            {
-              "name": {
-                "value": "Dakota"
-              }
-            },
-            {
-              "name": {
-                "value": "Pepper"
-              }
-            },
-            {
-              "name": {
-                "value": "Maximus"
-              }
-            },
-            {
-              "name": {
-                "value": "Heidi"
-              }
-            },
-            {
-              "name": {
-                "value": "Romeo"
-              }
-            },
-            {
-              "name": {
-                "value": "Luna"
-              }
-            },
-            {
-              "name": {
-                "value": "Boomer"
-              }
-            },
-            {
-              "name": {
-                "value": "Dixie"
-              }
-            },
-            {
-              "name": {
-                "value": "Luke"
-              }
-            },
-            {
-              "name": {
-                "value": "Honey"
-              }
-            },
-            {
-              "name": {
-                "value": "Henry"
-              }
-            }
-          ],
-          "name": "AMAZON.Person"
-        }
-      ]
-    },
-    "dialog": {
-      "intents": [
-        {
-          "name": "StartTrainingIntent",
-          "confirmationRequired": false,
-          "slots": [
-            {
-              "name": "Dog",
-              "type": "AMAZON.Person",
-              "elicitationRequired": true,
-              "confirmationRequired": false,
-              "prompts": {
-                "elicitation": "Elicit.Slot.82864941948.1348564658371"
-              }
-            }
-          ]
-        },
-        {
-          "name": "SetDogNameIntent",
-          "confirmationRequired": false,
-          "slots": [
-            {
-              "name": "Dog",
-              "type": "AMAZON.Person",
-              "elicitationRequired": true,
-              "confirmationRequired": true,
-              "prompts": {
-                "confirmation": "Confirm.Slot.131889036702.1265795452932",
-                "elicitation": "Elicit.Slot.131889036702.1265795452932"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    "prompts": [
-      {
-        "id": "Elicit.Slot.82864941948.1348564658371",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Who should I train?"
-          },
-          {
-            "type": "PlainText",
-            "value": "I can train your dog. What's his name?"
-          },
-          {
-            "type": "PlainText",
-            "value": "What's the name of the dog I should train?"
-          }
-        ]
+         ]
       },
-      {
-        "id": "Confirm.Slot.131889036702.1265795452932",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "Is the dog's name {Dog} ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "I understood that our trainee is called {Dog} , correct?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Did I hear correct that your dog is called {Dog} ?"
-          },
-          {
-            "type": "PlainText",
-            "value": "Your dog is called {Dog} , correct?"
-          }
-        ]
+      "dialog":{
+         "intents":[
+            {
+               "name":"StartTrainingIntent",
+               "confirmationRequired":false,
+               "prompts":{
+
+               },
+               "slots":[
+                  {
+                     "name":"Dog",
+                     "type":"AMAZON.Person",
+                     "confirmationRequired":false,
+                     "elicitationRequired":true,
+                     "prompts":{
+                        "elicitation":"Elicit.Slot.82864941948.1348564658371"
+                     }
+                  }
+               ]
+            },
+            {
+               "name":"SetDogNameIntent",
+               "confirmationRequired":false,
+               "prompts":{
+
+               },
+               "slots":[
+                  {
+                     "name":"Dog",
+                     "type":"AMAZON.Person",
+                     "confirmationRequired":true,
+                     "elicitationRequired":true,
+                     "prompts":{
+                        "confirmation":"Confirm.Slot.131889036702.1265795452932",
+                        "elicitation":"Elicit.Slot.131889036702.1265795452932"
+                     }
+                  }
+               ]
+            }
+         ]
       },
-      {
-        "id": "Elicit.Slot.131889036702.1265795452932",
-        "variations": [
-          {
-            "type": "PlainText",
-            "value": "How can I call your dog?"
-          },
-          {
-            "type": "PlainText",
-            "value": "How is the dog called?"
-          },
-          {
-            "type": "PlainText",
-            "value": "What is the dog's name?"
-          }
-        ]
-      }
-    ]
-  }
+      "prompts":[
+         {
+            "id":"Elicit.Slot.82864941948.1348564658371",
+            "variations":[
+               {
+                  "type":"PlainText",
+                  "value":"Who should I train?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"I can train your dog. What's his name?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"What's the name of the dog I should train?"
+               }
+            ]
+         },
+         {
+            "id":"Confirm.Slot.131889036702.1265795452932",
+            "variations":[
+               {
+                  "type":"PlainText",
+                  "value":"Is the dog's name {Dog} ?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"I understood that our trainee is called {Dog} , correct?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"Did I hear correct that your dog is called {Dog} ?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"Your dog is called {Dog} , correct?"
+               }
+            ]
+         },
+         {
+            "id":"Elicit.Slot.131889036702.1265795452932",
+            "variations":[
+               {
+                  "type":"PlainText",
+                  "value":"How can I call your dog?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"How is the dog called?"
+               },
+               {
+                  "type":"PlainText",
+                  "value":"What is the dog's name?"
+               }
+            ]
+         }
+      ]
+   }
 }

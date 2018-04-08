@@ -29,10 +29,11 @@ See [here](https://developer.amazon.com/blogs/post/Tx14R0IYYGH3SKT/Flask-Ask-A-N
 5. Create a new table called "dognames" in DynamoDB
 
 6.a. For running locally (ngrok):
-`pip install -r flask-ask`
+`pip install --user  git+https://github.com/johnwheeler/flask-ask.git`
+`python -m pip install --user boto3`
 
 6.b. for deploying
-Run `pip install -r flask-ask -t lambda/custom/lib` (see section "Deployment when not on a linux machine).
+Run `pip install git+https://github.com/johnwheeler/flask-ask.git -t lambda/custom/lib` (see section "Deployment when not on a linux machine).
 
 7. Create a zip of the content of this folder (Python files)
 
