@@ -31,13 +31,19 @@ dog_name: |
   What's your dog's name?
 
 dog_name_set: |
-  I'll remember that your dog is called {{ dog }}. Hi, {{ dog }}! Should I start training now?
+  I'll remember that your dog is called {{ dog }}. Hi, {{ dog }}! Is {{ dog }} male or female?
 
 dog_name_set_card_title: |
   Hi, {{ dog }}!
 
 dog_name_set_card_content: |
   I'll remember that {{ dog }} is my new training buddy.
+
+ask_sex: |
+  Is your dog a boy or a girl?
+
+sex_set: |
+  I'll remember that {{ dog }} is a {{ sex }}
 
 should_start_training: |
   Should I start a training session now?
@@ -98,8 +104,8 @@ train_again: |
 you: |
   you
 
-boy: |
+male: |
   boy
 
-girl: |
+female: |
   girl

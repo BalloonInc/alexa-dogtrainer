@@ -33,10 +33,13 @@ try:
 except:
     DEBUG = 0
 
+log = logging.getLogger('dogtrainer')
+
 if DEBUG:
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    log.info("Debug mode on: log level set to INFO")
 else:
-    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.WARNING)
 
 
 ###
@@ -44,28 +47,33 @@ else:
 ###
 
 # Table name
-DOGS_TABLE = "dogs"
+DOGS_TABLE = 'dogs'
 # fields
-DOG_NAME ="dogName"
-PREVIOUS_NAMES="previous_names"
-NUMBER_OF_TRAININGS = "number_of_trainings"
-NUMBER_OF_RENAMES="number_of_renames"
-CREATED_AT="created_at"
-UPDATED_AT="updated_at"
+DOG_NAME ='dogName'
+SEX = 'sex'
+PREVIOUS_DOGS='previous_dogs'
+NUMBER_OF_TRAININGS = 'number_of_trainings'
+NUMBER_OF_RENAMES='number_of_renames'
+CREATED_AT='created_at'
+UPDATED_AT='updated_at'
 
+# Dog sex enum
+MALE = 'male'
+FEMALE = 'female'
+UNKNOWN = 'unknown'
 
 ###
 ### ------------------ Constants for last_question session attribute ------------------
 ###
 
 # Key
-LAST_QUESTION = "last_question"
+LAST_QUESTION = 'last_question'
 # Values
 NOTHING = 0
 SHOULD_START_TRAINING = 1
 TRAINING_CONFIRMATION = 2
 DOG_NAME_ASKED = 3
-MALE_OR_FEMALE = 4
+SEX_ASKED = 4
 
 
 ###
@@ -85,7 +93,7 @@ ask = Ask(app, '/')
 
 @ask.on_session_started
 def start_session():
-    logging.info("Session started at {}".format(datetime.now().isoformat()))
+    log.info("Session started at {}".format(datetime.now().isoformat()))
 
 @ask.session_ended
 def session_ended():
@@ -132,9 +140,9 @@ def handle_no():
 def handle_yes():
     if LAST_QUESTION in session.attributes:
         last_question =session.attributes[LAST_QUESTION]
-        logging.info("Last question was: {}".format(last_question) )
+        log.info("Last question was: {}".format(last_question) )
         if last_question == SHOULD_START_TRAINING:
-            return startTrainingHandler(None)
+            return startTrainingHandler(None, None)
         elif last_question == TRAINING_CONFIRMATION:
             return train(None)
         elif last_question == DOG_NAME_ASKED:
@@ -142,55 +150,93 @@ def handle_yes():
         else:
             return endSession()
     else:
-        logging.error("Unknown last question")
+        log.error("Unknown last question")
         return endSession()
 
-@ask.intent('SetDogNameIntent', mapping={'dogNameFromIntent': 'Dog'})
-def setDogNameHandler(dogNameFromIntent):
-    if not dogNameFromIntent:
+@ask.intent('SetDogNameIntent', mapping={'dogName': 'Dog'})
+def setDogNameHandler(dogName):
+    if not dogName:
+        log.info("SetDogNameIntent started without filled name slot. Re-asking.")
         return delegate()
 
-    saveDogNameForUser(dogNameFromIntent, session.user.userId)
-    session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
+    saveDogForUser(session.user.userId, dogName=dogName)
+    session.attributes[LAST_QUESTION] = SEX_ASKED
 
-    speech_output = render_template('dog_name_set', dog=dogNameFromIntent)
-    reprompt = render_template('should_start_training')
-    card_title = render_template('dog_name_set_card_title', dog=dogNameFromIntent)
-    card_content = render_template('dog_name_set_card_content', dog=dogNameFromIntent)
+    speech_output = render_template('dog_name_set', dog=dogName)
+    reprompt = render_template('ask_sex')
+    card_title = render_template('dog_name_set_card_title', dog=dogName)
+    card_content = render_template('dog_name_set_card_content', dog=dogName)
 
     return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
 
-@ask.intent('StartTrainingIntent', mapping={'dogNameFromIntent': 'Dog'})
-def startTrainingHandler(dogNameFromIntent):
-    dogFromDynamoDB = getDogFromDynamoDB(session.user.userId)
-
-    # If we don't know the dogname at all, ask again
-    if not (dogNameFromIntent or dogFromDynamoDB):
-        return delegate()
-    # If it is in the DB, but not in the intent, just get it from the DB
-    if not dogNameFromIntent:
-        dog = dogFromDynamoDB
-    # If it is in the intent, use that one and update DB if needed:
+@ask.intent('SetSexIntent', mapping={'dogName': 'Dog', 'sex': 'Sex'})
+def setSex(sex, dogName):
+    if not dogName:
+        try:
+            dogFromDynamoDB = getDogFromDynamoDB(session.user.userId)
+            dogName = dogFromDynamoDB[DOG_NAME]
+            log.info("Fetched dog name from DB: {}".format(dogName))
+        except:
+            log.info("SetSexIntent started, but I don't know the name yet. First asking that before asking sex")
+            return setDogNameHandler(None)
     else:
-        dog = saveDogNameForUser(dogNameFromIntent, user)
+        log.info("Dog name taken from intent: {}".format(dogName))
+    try:
+        sex = getUniqueSlotID(request.intent.slots.Sex)
+    except Exception as e:
+        log.info("Could not get sex from intent.")
+        return delegate()
+
+    saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
+
+    session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
+    speech_output = render_template('sex_set', dog=dogName, sex=render_template(sex))
+    reprompt = render_template('should_start_training')
+    card_title = render_template('dog_name_set_card_title', dog=dogName)
+    card_content = render_template('dog_name_set_card_content', dog=dogName)
+
+    return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
+
+@ask.intent('StartTrainingIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
+def startTrainingHandler(dogName, sexFromIntent):
+    dogFromDynamoDB = getDogFromDynamoDB(session.user.userId)
+    # If we don't know the dogname at all, ask again
+    if not dogName:
+        try:
+            dogName = dogFromDynamoDB[DOG_NAME]
+        except:
+            log.info("Name not in intent, and dog not in DB. Asking name first.")
+            session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
+            return delegate()
+
+    if sexFromIntent:
+        sex = getUniqueSlotID(request.intent.slots.Sex)
+    else:
+        try:
+            sex = dogFromDynamoDB[SEX]
+            assert sex != UNKNOWN
+        except:
+            session.attributes[LAST_QUESTION] = SEX_ASKED
+            log.info("Sex is not known. Asking.")
+            request.intent.slots.Dog.value = dogName
+            return delegate(updated_intent=request.intent)
+
+    dog = saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
 
     if dog[NUMBER_OF_TRAININGS] < 2:
         return explainAndAskConfirmation(dog)
-
     else:
         return train(dog)
 
 def train(dog):
     if not dog:
         dog = getDogFromDynamoDB(session.user.userId)
-
-    sex = render_template('boy')
     
     dog[NUMBER_OF_TRAININGS] += 1
     saveDogToDynamoDB(dog, session.user.userId)
     session.attributes[LAST_QUESTION]=SHOULD_START_TRAINING
 
-    speech_output = render_template('training', dog=dog[DOG_NAME], sex=sex)
+    speech_output = render_template('training', dog=dog[DOG_NAME], sex=render_template(dog[SEX]))
     reprompt = render_template('train_again')
     card_title = render_template('training_card_title')
     card_content = render_template('training_card_content', dog=dog[DOG_NAME])
@@ -209,10 +255,10 @@ def explainAndAskConfirmation(dog):
 
 def endSession():
     dog = getDogFromDynamoDB(session.user.userId)
-    if dog:
+    try:
         who_had_fun = dog[DOG_NAME]
         optional_name = " " + who_had_fun
-    else:
+    except:
         who_had_fun = render_template('you')
         optional_name = ""
         
@@ -226,7 +272,7 @@ def endSession():
 ### ---------------  Local Helpers ---------------
 ###
 
-def saveDogNameForUser(dogName, user):
+def saveDogForUser(user, dogName="", sex=UNKNOWN):
     dog = getDogFromDynamoDB(user)
 
     # Dog does not yet exist in DB
@@ -234,20 +280,50 @@ def saveDogNameForUser(dogName, user):
         dog = {
             NUMBER_OF_TRAININGS:0,
             NUMBER_OF_RENAMES:0,
-            PREVIOUS_NAMES:[],
-            DOG_NAME:dogName
+            PREVIOUS_DOGS:{},
+            DOG_NAME: dogName
         }
+
+        if sex:
+            log.info("Sex is {}, will set".format(sex))
+            dog[SEX] = sex
+        else:
+            log.info("Sex is not set, will set to {}".format(UNKNOWN))
+            dog[SEX] = UNKNOWN
+
         return saveDogToDynamoDB(dog, user)
 
-    # Name has changed, update
-    if dog[DOG_NAME].lower() != dogName.lower():
+    # One time upgrade
+    dog = upgrade_v1_to_v2(dog)
+
+    oldDogName = dog[DOG_NAME]
+    oldSex = dog[SEX]
+
+    # Name has changed: update
+    if dogName and dogName.lower() != oldDogName.lower():
+        dog[PREVIOUS_DOGS][oldDogName] = dog[SEX]
         dog[NUMBER_OF_RENAMES] += 1
-        dog[PREVIOUS_NAMES].append(dog[DOG_NAME])
         dog[DOG_NAME] = dogName
-        return saveDogToDynamoDB(dog, user)
-    # Nothing changed, don't update
-    return dog
 
+    # Sex has changed: update
+    if sex != oldSex and sex != UNKNOWN:
+        dog[SEX] = sex
+
+    return saveDogToDynamoDB(dog, user)
+
+# Validates that there is only one 
+def getUniqueSlotID(slot):
+    assert slot.resolutions.resolutionsPerAuthority[0]['status']['code'] == "ER_SUCCESS_MATCH"
+    assert len(slot.resolutions.resolutionsPerAuthority[0]['values']) == 1
+    return slot.resolutions.resolutionsPerAuthority[0]['values'][0]['value']['id']
+
+def upgrade_v1_to_v2(dog):
+    if not PREVIOUS_DOGS in dog:
+        dog[PREVIOUS_DOGS] = {}
+    if not SEX in dog:
+        log.info("Sex is not set, will set to {}".format(UNKNOWN))
+        dog[SEX] = UNKNOWN
+    return dog
 
 ###
 ### --------------- DB Getters and setters --------------- 
@@ -257,9 +333,8 @@ def getDogFromDynamoDB(user):
     try:
         response = dogs_table.get_item(Key={ 'account': user })
         return response['Item']['dog']
-    except Exception as e:
-        logging.error("exception while getting dog: ")
-        logging.error(e)
+    except:
+        log.info("No dog found.")
         return None
 
 def saveDogToDynamoDB(dog, user):
@@ -268,17 +343,19 @@ def saveDogToDynamoDB(dog, user):
     if not CREATED_AT in dog:
         dog[CREATED_AT] = now
     dog[UPDATED_AT] = now
+    log.info("Dog will be saved: ")
+    log.info(dog)
 
     try:
         dogs_table.put_item(Item={'account':user,'dog':dog })
         return dog
     except Exception as e:
-        logging.error("exception while saving dog: ")
-        logging.error(e)
+        log.error("Exception while saving dog: ")
+        log.error(e)
         return None
 
 ### 
-### Main handler: lambda_handler for lambda, app.run for debugging
+### Main handler: lambda_handler for lambda, app.run for debugging/ngrok
 ###
 
 def lambda_handler(event, _context):
