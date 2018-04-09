@@ -191,6 +191,8 @@
             }
           ],
           "samples": [
+            "{Dog} is not a girl",
+            "{Dog} is not a boy",
             "She's a {Sex} dog",
             "He's a {Sex} dog",
             "she is a {Sex}",
@@ -199,8 +201,7 @@
             "he is {Sex}",
             "{Dog} is a {Sex}",
             "{Dog} is {Sex}",
-            "my dog is a girl",
-            "my dog is a boy",
+            "my dog is a {Sex}",
             "set my dog's sex",
             "set the dog's sex",
             "change the dog's sex",

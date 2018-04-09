@@ -39,11 +39,17 @@ dog_name_set_card_title: |
 dog_name_set_card_content: |
   I'll remember that {{ dog }} is my new training buddy.
 
+dog_name_set_again: |
+  I'll remember that your dog is called {{ dog }}. Hi, {{ dog }}! Is {{ dog }} male or female?
+
+dog_name_set_again_card_content: |
+  Let's train {{ dog }} again.
+
 ask_sex: |
   Is your dog a boy or a girl?
 
 sex_set: |
-  I'll remember that {{ dog }} is a {{ sex }}
+  I'll remember that {{ dog }} is a {{ sex }}. Should I start a training now?
 
 should_start_training: |
   Should I start a training session now?
@@ -58,7 +64,7 @@ training_confirmation: |
   <speak>
     Lets get started. 
     Take your treats, motivate {{ dog }} to listen to me, 
-    by giving him a treat when he follows the commands. 
+    by giving {{ pronoun }} a treat when {{ subject }} follows the commands. 
     Ready to start?
   </speak>
 
@@ -109,3 +115,15 @@ male: |
 
 female: |
   girl
+
+male_pronoun: |
+  him
+
+female_pronoun: |
+  her
+
+male_subject: |
+  he
+
+female_subject: |
+  she

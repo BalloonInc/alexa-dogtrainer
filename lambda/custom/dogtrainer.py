@@ -159,13 +159,27 @@ def setDogNameHandler(dogName):
         log.info("SetDogNameIntent started without filled name slot. Re-asking.")
         return delegate()
 
-    saveDogForUser(session.user.userId, dogName=dogName)
-    session.attributes[LAST_QUESTION] = SEX_ASKED
+    try:
+        existingDog = getDogFromDynamoDB(session.user.userId)
+        oldSex = existingDog[PREVIOUS_DOGS][dogName]
 
-    speech_output = render_template('dog_name_set', dog=dogName)
-    reprompt = render_template('ask_sex')
-    card_title = render_template('dog_name_set_card_title', dog=dogName)
-    card_content = render_template('dog_name_set_card_content', dog=dogName)
+        assert oldSex != UNKNOWN
+        saveDogForUser(session.user.userId, dogName=dogName, sex=oldSex)
+        session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
+
+        speech_output = render_template('dog_name_set_again', dog=dogName)
+        reprompt = render_template('should_start_training')
+        card_title = render_template('dog_name_set_card_title', dog=dogName)
+        card_content = render_template('dog_name_set_again_card_content', dog=dogName)
+
+    except:
+        saveDogForUser(session.user.userId, dogName=dogName, sex=UNKNOWN)
+        session.attributes[LAST_QUESTION] = SEX_ASKED
+
+        speech_output = render_template('dog_name_set', dog=dogName)
+        reprompt = render_template('ask_sex')
+        card_title = render_template('dog_name_set_card_title', dog=dogName)
+        card_content = render_template('dog_name_set_card_content', dog=dogName)
 
     return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
 
@@ -213,7 +227,10 @@ def startTrainingHandler(dogName, sexFromIntent):
         sex = getUniqueSlotID(request.intent.slots.Sex)
     else:
         try:
-            sex = dogFromDynamoDB[SEX]
+            if dogName == dogFromDynamoDB[DOG_NAME]:
+                sex = dogFromDynamoDB[SEX]
+            else:
+                sex = dogFromDynamoDB[PREVIOUS_DOGS][dogName]
             assert sex != UNKNOWN
         except:
             session.attributes[LAST_QUESTION] = SEX_ASKED
@@ -245,11 +262,13 @@ def train(dog):
 
 def explainAndAskConfirmation(dog):
     session.attributes[LAST_QUESTION]=TRAINING_CONFIRMATION
-
-    speech_output = render_template('training_confirmation', dog=dog[DOG_NAME])
+    dogName = dog[DOG_NAME]
+    pronoun = render_template(dog[SEX]+"_pronoun")
+    subject = render_template(dog[SEX]+"_subject")
+    speech_output = render_template('training_confirmation', dog=dogName, pronoun=pronoun, subject=subject)
     reprompt = render_template('ready_to_start_training')
     card_title = render_template('training_confirmation_card_title')
-    card_content = render_template('training_confirmation_card_content', dog=dog[DOG_NAME])
+    card_content = render_template('training_confirmation_card_content', dog=dogName)
 
     return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
 
