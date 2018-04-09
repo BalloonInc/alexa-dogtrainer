@@ -174,12 +174,16 @@
               "name": "Sex",
               "type": "Sex",
               "samples": [
+                "she's {Sex}",
+                "she's a {Sex}",
+                "he's a {Sex}",
+                "he is a {Sex}",
                 "the dog is {Sex}",
                 "the dog is a {Sex}",
                 "she is {Sex}",
                 "he is {Sex}",
                 "it's a {Sex}",
-                "a sex",
+                "a {Sex}",
                 "my dog is a {Sex}",
                 "my dog is {Sex}",
                 "{Sex}"
@@ -723,8 +727,7 @@
                   "feminine",
                   "woman",
                   "girl",
-                  "female dog",
-                  "female"
+                  "female dog"
                 ]
               }
             },
@@ -740,7 +743,6 @@
                   "cur",
                   "castrated man",
                   "masculine",
-                  "male",
                   "boy"
                 ]
               }
