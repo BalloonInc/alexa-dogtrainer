@@ -9,7 +9,7 @@ Wouter Devriendt
 ### ------------------ Imports ------------------
 ###
 
-# General imports
+# Standard library imports
 import os, sys
 from datetime import datetime
 import logging
@@ -17,15 +17,19 @@ import logging
 # Amazon libraries import
 import boto3
 
-# Flask imports
+# add lib to path for other imports
 sys.path.append('./lib')
 
+# other external libs import
+import watchtower
+
+# flask imports
 from flask import Flask, json, render_template
 from flask_ask import Ask, request, session, question, statement, delegate, elicit_slot
 
 
 ###
-### ------------------ DEBUG ------------------
+### ------------------ DEBUG and Logging ------------------
 ###
 
 try:
@@ -33,14 +37,22 @@ try:
 except:
     DEBUG = 0
 
-log = logging.getLogger('dogtrainer')
+try:
+    TRACE = os.environ['TRACE']
+except:
+    TRACE = 0
 
-if DEBUG:
+if TRACE:
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+    logging.info("Debug mode on: log level set to DEBUG")
+elif DEBUG:
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-    log.info("Debug mode on: log level set to INFO")
+    logging.info("Debug mode on: log level set to INFO")
 else:
     logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.WARNING)
 
+log = logging.getLogger(__name__)
+log.addHandler(watchtower.CloudWatchLogHandler())
 
 ###
 ### ------------------ Constants for the dog table ------------------
@@ -86,7 +98,7 @@ dogs_table = dynamodb.Table(DOGS_TABLE)
 app = Flask(__name__)
 ask = Ask(app, '/')
 
-
+app.logger.addHandler(watchtower.CloudWatchLogHandler())
 ###
 ### Session management
 ###

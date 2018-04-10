@@ -58,9 +58,11 @@ If your echo is linked with the same account as your development account, you sh
 First run a docker ubuntu container:
 `docker run -v "$PWD":/working -it --rm lambci/lambda:build-python3.6 bash`
 
-Then build the libs to the lib folder and zip everything
+Then build the libs to the lib folder and zip everything:
 
-`pip install flask-ask -t lib`
-`zip -r ../lambda-deploy.zip .`
+```
+pip install -r requirements.txt -t lib --upgrade 
+zip -r ../deploy.zip .
+```
 
 Upload the zip manually to the lambda. `ask deploy` doesn't seem to work for now because hidden folders are not uploaded.
