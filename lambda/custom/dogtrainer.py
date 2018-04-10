@@ -21,7 +21,7 @@ import boto3
 sys.path.append('./lib')
 
 from flask import Flask, json, render_template
-from flask_ask import Ask, request, session, question, statement, delegate
+from flask_ask import Ask, request, session, question, statement, delegate, elicit_slot
 
 
 ###
@@ -183,8 +183,8 @@ def setDogNameHandler(dogName):
 
     return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
 
-@ask.intent('SetSexIntent', mapping={'dogName': 'Dog', 'sex': 'Sex'})
-def setSex(sex, dogName):
+@ask.intent('SetSexIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
+def setSex(sexFromIntent, dogName):
     if not dogName:
         try:
             dogFromDynamoDB = getDogFromDynamoDB(session.user.userId)
@@ -195,11 +195,22 @@ def setSex(sex, dogName):
             return setDogNameHandler(None)
     else:
         log.info("Dog name taken from intent: {}".format(dogName))
-    try:
-        sex = getUniqueSlotID(request.intent.slots.Sex)
-    except Exception as e:
+
+    if not sexFromIntent:
         log.info("Could not get sex from intent.")
         return delegate()
+
+    sex = getUniqueSlotID(request.intent.slots.Sex)
+
+    # Sex is given, but is invalid. Explicitely ask for it
+    if not sex:
+        log.info("Invalid sex. Re-asking")
+        del request.intent.slots.Sex['value']
+        del request.intent.slots.Sex['resolutions']
+        log.info("Updated request to remove invalid sex: {}".format(request))
+        session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
+        speech_output = render_template("invalid_sex_ask_again", dog=dogName)
+        return elicit_slot("Sex", speech_output, updated_intent=request.intent)
 
     saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
 
@@ -214,6 +225,7 @@ def setSex(sex, dogName):
 @ask.intent('StartTrainingIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
 def startTrainingHandler(dogName, sexFromIntent):
     dogFromDynamoDB = getDogFromDynamoDB(session.user.userId)
+
     # If we don't know the dogname at all, ask again
     if not dogName:
         try:
@@ -225,6 +237,14 @@ def startTrainingHandler(dogName, sexFromIntent):
 
     if sexFromIntent:
         sex = getUniqueSlotID(request.intent.slots.Sex)
+        if not sex:
+            log.info("Invalid sex. Re-asking")
+            del request.intent.slots.Sex['value']
+            del request.intent.slots.Sex['resolutions']
+            log.info("Updated request to remove invalid sex: {}".format(request))
+            session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
+            speech_output = render_template("invalid_sex_ask_again", dog=dogName)
+            return elicit_slot("Sex", speech_output, updated_intent=request.intent)
     else:
         try:
             if dogName == dogFromDynamoDB[DOG_NAME]:
@@ -235,8 +255,7 @@ def startTrainingHandler(dogName, sexFromIntent):
         except:
             session.attributes[LAST_QUESTION] = SEX_ASKED
             log.info("Sex is not known. Asking.")
-            request.intent.slots.Dog.value = dogName
-            return delegate(updated_intent=request.intent)
+            return delegate()
 
     dog = saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
 
@@ -330,11 +349,14 @@ def saveDogForUser(user, dogName="", sex=UNKNOWN):
 
     return saveDogToDynamoDB(dog, user)
 
-# Validates that there is only one 
+# Validates that there is only one, returns the ID if it exists, None if it doesn't 
 def getUniqueSlotID(slot):
-    assert slot.resolutions.resolutionsPerAuthority[0]['status']['code'] == "ER_SUCCESS_MATCH"
-    assert len(slot.resolutions.resolutionsPerAuthority[0]['values']) == 1
-    return slot.resolutions.resolutionsPerAuthority[0]['values'][0]['value']['id']
+    try:
+        assert slot.resolutions.resolutionsPerAuthority[0]['status']['code'] == "ER_SUCCESS_MATCH"
+        assert len(slot.resolutions.resolutionsPerAuthority[0]['values']) == 1
+        return slot.resolutions.resolutionsPerAuthority[0]['values'][0]['value']['id']
+    except AssertionError:
+        return None
 
 def upgrade_v1_to_v2(dog):
     if not PREVIOUS_DOGS in dog:

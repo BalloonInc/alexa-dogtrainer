@@ -51,6 +51,9 @@ ask_sex: |
 sex_set: |
   I'll remember that {{ dog }} is a {{ sex }}. Should I start a training now?
 
+invalid_sex_ask_again: |
+  That doesn't seem to be a valid response. Is {{ dog }} a boy or a girl?
+
 should_start_training: |
   Should I start a training session now?
 
