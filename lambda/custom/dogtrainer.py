@@ -175,35 +175,54 @@ def handle_hello():
     return question(speech_output).reprompt(reprompt).simple_card(card_title, speech_output)
 
 
-@ask.intent('SetDogNameIntent', mapping={'dogName': 'Dog'})
-def setDogNameHandler(dogName):
+@ask.intent('SetDogNameIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
+def setDogNameHandler(dogName, sexFromIntent):
     if not dogName:
         printDebug("SetDogNameIntent started without filled name slot. Re-asking.")
         return delegate()
 
-    try:
-        existingDog = getDogFromDynamoDB(session.user.userId)
-        oldSex = existingDog[PREVIOUS_DOGS][dogName]
+    if sexFromIntent:
+        sex = getUniqueSlotID(request.intent.slots.Sex)
 
-        assert oldSex != UNKNOWN
-        saveDogForUser(session.user.userId, dogName=dogName, sex=oldSex)
-        session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
+        # Sex is given, but is invalid. Explicitely ask for it
+        if not sex:
+            printDebug("Invalid sex. Re-asking")
+            del request.intent.slots.Sex['value']
+            del request.intent.slots.Sex['resolutions']
+            printDebug("Updated request to remove invalid sex: {}".format(request))
+            session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
+            speech_output = render_template("invalid_sex_ask_again", dog=dogName)
+            return elicit_slot("Sex", speech_output, updated_intent=request.intent)
+        saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
 
-        speech_output = render_template('dog_name_set_again', dog=dogName)
+        speech_output = render_template('dog_name_set_sex_set', dog=dogName, pronoun=render_template(sex+'_pronoun'))
         reprompt = render_template('should_start_training')
-        card_title = render_template('dog_name_set_card_title', dog=dogName)
-        card_content = render_template('dog_name_set_again_card_content', dog=dogName)
-
-    except:
-        saveDogForUser(session.user.userId, dogName=dogName, sex=UNKNOWN)
-        session.attributes[LAST_QUESTION] = SEX_ASKED
-
-        speech_output = render_template('dog_name_set', dog=dogName)
-        reprompt = render_template('ask_sex')
         card_title = render_template('dog_name_set_card_title', dog=dogName)
         card_content = render_template('dog_name_set_card_content', dog=dogName)
 
-    return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
+        return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
+
+    else:
+        try:
+            existingDog = getDogFromDynamoDB(session.user.userId)
+            oldSex = existingDog[PREVIOUS_DOGS][dogName]
+            print(oldSex)
+            assert oldSex != UNKNOWN
+            saveDogForUser(session.user.userId, dogName=dogName, sex=oldSex)
+            session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
+
+            speech_output = render_template('dog_name_set_again', dog=dogName, pronoun=render_template(oldSex+'_pronoun'))
+            reprompt = render_template('should_start_training')
+            card_title = render_template('dog_name_set_card_title', dog=dogName)
+            card_content = render_template('dog_name_set_again_card_content', dog=dogName)
+            return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
+
+        except Exception as e:
+            printDebug("The old sex was invalid, asking again.")
+            saveDogForUser(session.user.userId, dogName=dogName, sex=UNKNOWN)
+            session.attributes[LAST_QUESTION] = SEX_ASKED
+            return delegate()
+
 
 @ask.intent('SetSexIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
 def setSex(sexFromIntent, dogName):
@@ -239,10 +258,8 @@ def setSex(sexFromIntent, dogName):
     session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
     speech_output = render_template('sex_set', dog=dogName, sex=render_template(sex))
     reprompt = render_template('should_start_training')
-    card_title = render_template('dog_name_set_card_title', dog=dogName)
-    card_content = render_template('dog_name_set_card_content', dog=dogName)
 
-    return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
+    return question(speech_output).reprompt(reprompt)
 
 @ask.intent('StartTrainingIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
 def startTrainingHandler(dogName, sexFromIntent):
@@ -270,14 +287,20 @@ def startTrainingHandler(dogName, sexFromIntent):
     else:
         try:
             if dogName == dogFromDynamoDB[DOG_NAME]:
+                printDebug("getting sex from active dog")
                 sex = dogFromDynamoDB[SEX]
             else:
+                printDebug("getting sex from previous dog")
+
                 sex = dogFromDynamoDB[PREVIOUS_DOGS][dogName]
+            printDebug("found sex as: {}".format(sex))
             assert sex != UNKNOWN
         except:
             session.attributes[LAST_QUESTION] = SEX_ASKED
             printDebug("Sex is not known. Asking.")
             return delegate()
+
+    printDebug("Sex finally known: {}".format(sex))
 
     dog = saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
 
@@ -357,17 +380,15 @@ def saveDogForUser(user, dogName="", sex=UNKNOWN):
     dog = upgrade_v1_to_v2(dog)
 
     oldDogName = dog[DOG_NAME]
-    oldSex = dog[SEX]
 
     # Name has changed: update
     if dogName and dogName.lower() != oldDogName.lower():
+        print("old sex set to: {}".format(dog[SEX]))
         dog[PREVIOUS_DOGS][oldDogName] = dog[SEX]
         dog[NUMBER_OF_RENAMES] += 1
         dog[DOG_NAME] = dogName
 
-    # Sex has changed: update
-    if sex != oldSex and sex != UNKNOWN:
-        dog[SEX] = sex
+    dog[SEX] = sex
 
     return saveDogToDynamoDB(dog, user)
 

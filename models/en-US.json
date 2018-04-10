@@ -72,14 +72,18 @@
               "name": "Sex",
               "type": "Sex",
               "samples": [
-                "{Dog} is {Sex}",
-                "She is {Sex}",
-                "He is {Sex}",
-                "It's {Sex}",
-                "It's a {Sex}",
-                "She is a {Sex}",
-                "He is a {Sex}",
+                "she's {Sex}",
+                "she's a {Sex}",
+                "he's a {Sex}",
+                "he is a {Sex}",
+                "the dog is {Sex}",
+                "the dog is a {Sex}",
+                "she is {Sex}",
+                "he is {Sex}",
+                "it's a {Sex}",
                 "a {Sex}",
+                "my dog is a {Sex}",
+                "my dog is {Sex}",
                 "{Sex}"
               ]
             }
@@ -127,6 +131,25 @@
                 "Her name is {Dog}",
                 "His name is {Dog}",
                 "{Dog}"
+              ]
+            },
+            {
+              "name": "Sex",
+              "type": "Sex",
+              "samples": [
+                "she's {Sex}",
+                "she's a {Sex}",
+                "he's a {Sex}",
+                "he is a {Sex}",
+                "the dog is {Sex}",
+                "the dog is a {Sex}",
+                "she is {Sex}",
+                "he is {Sex}",
+                "it's a {Sex}",
+                "a {Sex}",
+                "my dog is a {Sex}",
+                "my dog is {Sex}",
+                "{Sex}"
               ]
             }
           ],
@@ -811,6 +834,15 @@
                 "confirmation": "Confirm.Slot.131889036702.1265795452932",
                 "elicitation": "Elicit.Slot.131889036702.1265795452932"
               }
+            },
+            {
+              "name": "Sex",
+              "type": "Sex",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.384093695778.1372467144783"
+              }
             }
           ]
         },
@@ -926,6 +958,19 @@
           {
             "type": "PlainText",
             "value": "Is your dog male or female?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.384093695778.1372467144783",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Is {Dog} a boy or a girl?"
+          },
+          {
+            "type": "PlainText",
+            "value": "Is {Dog} male or femalt?"
           }
         ]
       }
