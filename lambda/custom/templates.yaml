@@ -27,6 +27,12 @@ help_text: |
 help_card_title: |
   Help
 
+hello_text: |
+  Woof, woof, woof. Hello, my name is Dog Trainer. Nice to meet you.
+
+hello_card_title: |
+  Hello!
+
 dog_name: |
   What's your dog's name?
 

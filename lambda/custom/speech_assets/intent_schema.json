@@ -16,6 +16,9 @@
       "intent": "AMAZON.YesIntent"
     },
     {
+      "intent": "HelloIntent"
+    },
+    {
       "intent": "StartTrainingIntent"
     },
     {

@@ -153,6 +153,16 @@ def handle_yes():
         log.error("Unknown last question")
         return endSession()
 
+@ask.intent('HelloIntent')
+def handle_hello():
+    session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
+
+    speech_output = render_template('hello_text') + " " + render_template('help_text')
+    reprompt = render_template('should_start_training')
+    card_title = render_template('hello_card_title')
+    return question(speech_output).reprompt(reprompt).simple_card(card_title, speech_output)
+
+
 @ask.intent('SetDogNameIntent', mapping={'dogName': 'Dog'})
 def setDogNameHandler(dogName):
     if not dogName:

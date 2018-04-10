@@ -14,6 +14,7 @@
         {
           "name": "AMAZON.HelpIntent",
           "samples": [
+            "who are you",
             "give more info",
             "give info",
             "I want more info",
@@ -219,6 +220,24 @@
             "The dog is {Sex}",
             "It's a {Sex}",
             "My dog is {Sex}"
+          ]
+        },
+        {
+          "name": "HelloIntent",
+          "slots": [],
+          "samples": [
+            "Greetings",
+            "yo dog trainer",
+            "yo trainer",
+            "yo",
+            "what's up",
+            "how are you",
+            "hi there",
+            "hi trainer",
+            "hello dog trainer",
+            "hi dog trainer",
+            "hi",
+            "Hello"
           ]
         }
       ],
