@@ -105,7 +105,7 @@ app.logger.addHandler(watchtower.CloudWatchLogHandler())
 
 @ask.on_session_started
 def start_session():
-    log.info("Session started at {}".format(datetime.now().isoformat()))
+    printDebug("Session started at {}".format(datetime.now().isoformat()))
 
 @ask.session_ended
 def session_ended():
@@ -152,7 +152,7 @@ def handle_no():
 def handle_yes():
     if LAST_QUESTION in session.attributes:
         last_question =session.attributes[LAST_QUESTION]
-        log.info("Last question was: {}".format(last_question) )
+        printDebug("Last question was: {}".format(last_question) )
         if last_question == SHOULD_START_TRAINING:
             return startTrainingHandler(None, None)
         elif last_question == TRAINING_CONFIRMATION:
@@ -162,7 +162,7 @@ def handle_yes():
         else:
             return endSession()
     else:
-        log.error("Unknown last question")
+        print("Unknown last question")
         return endSession()
 
 @ask.intent('HelloIntent')
@@ -178,7 +178,7 @@ def handle_hello():
 @ask.intent('SetDogNameIntent', mapping={'dogName': 'Dog'})
 def setDogNameHandler(dogName):
     if not dogName:
-        log.info("SetDogNameIntent started without filled name slot. Re-asking.")
+        printDebug("SetDogNameIntent started without filled name slot. Re-asking.")
         return delegate()
 
     try:
@@ -211,25 +211,25 @@ def setSex(sexFromIntent, dogName):
         try:
             dogFromDynamoDB = getDogFromDynamoDB(session.user.userId)
             dogName = dogFromDynamoDB[DOG_NAME]
-            log.info("Fetched dog name from DB: {}".format(dogName))
+            printDebug("Fetched dog name from DB: {}".format(dogName))
         except:
-            log.info("SetSexIntent started, but I don't know the name yet. First asking that before asking sex")
+            printDebug("SetSexIntent started, but I don't know the name yet. First asking that before asking sex")
             return setDogNameHandler(None)
     else:
-        log.info("Dog name taken from intent: {}".format(dogName))
+        printDebug("Dog name taken from intent: {}".format(dogName))
 
     if not sexFromIntent:
-        log.info("Could not get sex from intent.")
+        printDebug("Could not get sex from intent.")
         return delegate()
 
     sex = getUniqueSlotID(request.intent.slots.Sex)
 
     # Sex is given, but is invalid. Explicitely ask for it
     if not sex:
-        log.info("Invalid sex. Re-asking")
+        printDebug("Invalid sex. Re-asking")
         del request.intent.slots.Sex['value']
         del request.intent.slots.Sex['resolutions']
-        log.info("Updated request to remove invalid sex: {}".format(request))
+        printDebug("Updated request to remove invalid sex: {}".format(request))
         session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
         speech_output = render_template("invalid_sex_ask_again", dog=dogName)
         return elicit_slot("Sex", speech_output, updated_intent=request.intent)
@@ -253,17 +253,17 @@ def startTrainingHandler(dogName, sexFromIntent):
         try:
             dogName = dogFromDynamoDB[DOG_NAME]
         except:
-            log.info("Name not in intent, and dog not in DB. Asking name first.")
+            printDebug("Name not in intent, and dog not in DB. Asking name first.")
             session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
             return delegate()
 
     if sexFromIntent:
         sex = getUniqueSlotID(request.intent.slots.Sex)
         if not sex:
-            log.info("Invalid sex. Re-asking")
+            printDebug("Invalid sex. Re-asking")
             del request.intent.slots.Sex['value']
             del request.intent.slots.Sex['resolutions']
-            log.info("Updated request to remove invalid sex: {}".format(request))
+            printDebug("Updated request to remove invalid sex: {}".format(request))
             session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
             speech_output = render_template("invalid_sex_ask_again", dog=dogName)
             return elicit_slot("Sex", speech_output, updated_intent=request.intent)
@@ -276,7 +276,7 @@ def startTrainingHandler(dogName, sexFromIntent):
             assert sex != UNKNOWN
         except:
             session.attributes[LAST_QUESTION] = SEX_ASKED
-            log.info("Sex is not known. Asking.")
+            printDebug("Sex is not known. Asking.")
             return delegate()
 
     dog = saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
@@ -345,10 +345,10 @@ def saveDogForUser(user, dogName="", sex=UNKNOWN):
         }
 
         if sex:
-            log.info("Sex is {}, will set".format(sex))
+            printDebug("Sex is {}, will set".format(sex))
             dog[SEX] = sex
         else:
-            log.info("Sex is not set, will set to {}".format(UNKNOWN))
+            printDebug("Sex is not set, will set to {}".format(UNKNOWN))
             dog[SEX] = UNKNOWN
 
         return saveDogToDynamoDB(dog, user)
@@ -384,7 +384,7 @@ def upgrade_v1_to_v2(dog):
     if not PREVIOUS_DOGS in dog:
         dog[PREVIOUS_DOGS] = {}
     if not SEX in dog:
-        log.info("Sex is not set, will set to {}".format(UNKNOWN))
+        printDebug("Sex is not set, will set to {}".format(UNKNOWN))
         dog[SEX] = UNKNOWN
     return dog
 
@@ -397,7 +397,7 @@ def getDogFromDynamoDB(user):
         response = dogs_table.get_item(Key={ 'account': user })
         return response['Item']['dog']
     except:
-        log.info("No dog found.")
+        printDebug("No dog found.")
         return None
 
 def saveDogToDynamoDB(dog, user):
@@ -406,17 +406,21 @@ def saveDogToDynamoDB(dog, user):
     if not CREATED_AT in dog:
         dog[CREATED_AT] = now
     dog[UPDATED_AT] = now
-    log.info("Dog will be saved: ")
-    log.info(dog)
+    printDebug("Dog will be saved: ")
+    printDebug(dog)
 
     try:
         dogs_table.put_item(Item={'account':user,'dog':dog })
         return dog
     except Exception as e:
-        log.error("Exception while saving dog: ")
-        log.error(e)
+        print("Exception while saving dog: ")
+        print(e)
         return None
 
+def printDebug(s):
+    if DEBUG:
+        print(s)
+        
 ### 
 ### Main handler: lambda_handler for lambda, app.run for debugging/ngrok
 ###
@@ -426,3 +430,4 @@ def lambda_handler(event, _context):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
