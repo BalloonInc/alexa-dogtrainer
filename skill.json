@@ -5,7 +5,7 @@
         "en-US": {
           "summary": "Automate your dog training. Amaze everyone at parties and show off how your dog follows the trainer's commands.",
           "examplePhrases": [
-            "Alexa, ask Dog Trainer to train Bobby.",
+            "Alexa, ask Dog Trainer to start a training for Bobby.",
             "Alexa, start Dog Trainer.",
             "Alexa, ask Dog Trainer to keep my dog busy."
           ],
@@ -41,7 +41,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "sourceDir": "lambda/custom"
+          "sourceDir": "lambda/deploy.zip"
         },
         "interfaces": []
       }

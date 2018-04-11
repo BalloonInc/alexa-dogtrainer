@@ -33,6 +33,9 @@ hello_text: |
 hello_card_title: |
   Hello!
 
+lets_train_get_name: |
+  Great, let's train. What is your dog's name?
+
 dog_name: |
   What's your dog's name?
 
@@ -40,7 +43,8 @@ dog_name_set: |
   I'll remember that your dog is called {{ dog }}. Hi, {{ dog }}! Is {{ dog }} male or female?
 
 dog_name_set_sex_set: |
-  I'll remember that your dog is called {{ dog }}. Hi, {{ dog }}! Should I start training {{ pronoun }}?
+  That's all I need to know about {{ dog }}. Should I start training {{ pronoun }}?
+  
 dog_name_set_card_title: |
   Hi, {{ dog }}!
 

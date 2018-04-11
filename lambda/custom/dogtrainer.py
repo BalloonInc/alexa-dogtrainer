@@ -158,7 +158,7 @@ def handle_yes():
         elif last_question == TRAINING_CONFIRMATION:
             return train(None)
         elif last_question == DOG_NAME_ASKED:
-            return setDogNameHandler(None)
+            return setDogNameHandler(None, None)
         else:
             return endSession()
     else:
@@ -190,7 +190,7 @@ def setDogNameHandler(dogName, sexFromIntent):
             del request.intent.slots.Sex['value']
             del request.intent.slots.Sex['resolutions']
             printDebug("Updated request to remove invalid sex: {}".format(request))
-            session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
+            session.attributes[LAST_QUESTION] = SEX_ASKED
             speech_output = render_template("invalid_sex_ask_again", dog=dogName)
             return elicit_slot("Sex", speech_output, updated_intent=request.intent)
         saveDogForUser(session.user.userId, dogName=dogName, sex=sex)
@@ -199,6 +199,7 @@ def setDogNameHandler(dogName, sexFromIntent):
         reprompt = render_template('should_start_training')
         card_title = render_template('dog_name_set_card_title', dog=dogName)
         card_content = render_template('dog_name_set_card_content', dog=dogName)
+        session.attributes[LAST_QUESTION] = SHOULD_START_TRAINING
 
         return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
 
@@ -218,11 +219,11 @@ def setDogNameHandler(dogName, sexFromIntent):
             return question(speech_output).reprompt(reprompt).simple_card(card_title, card_content)
 
         except Exception as e:
-            printDebug("The old sex was invalid, asking again.")
+            printDebug("The old sex was invalid or did not exist, asking again.")
             saveDogForUser(session.user.userId, dogName=dogName, sex=UNKNOWN)
             session.attributes[LAST_QUESTION] = SEX_ASKED
-            return delegate()
-
+            speech_output = render_template("dog_name_set", dog=dogName)
+            return elicit_slot("Sex", speech_output)
 
 @ask.intent('SetSexIntent', mapping={'dogName': 'Dog', 'sexFromIntent': 'Sex'})
 def setSex(sexFromIntent, dogName):
@@ -272,7 +273,9 @@ def startTrainingHandler(dogName, sexFromIntent):
         except:
             printDebug("Name not in intent, and dog not in DB. Asking name first.")
             session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
-            return delegate()
+            speech_output = render_template("lets_train_get_name")
+            printDebug("Starting elicit of DOG")
+            return elicit_slot('Dog', speech_output)
 
     if sexFromIntent:
         sex = getUniqueSlotID(request.intent.slots.Sex)
@@ -283,7 +286,7 @@ def startTrainingHandler(dogName, sexFromIntent):
             printDebug("Updated request to remove invalid sex: {}".format(request))
             session.attributes[LAST_QUESTION] = DOG_NAME_ASKED
             speech_output = render_template("invalid_sex_ask_again", dog=dogName)
-            return elicit_slot("Sex", speech_output, updated_intent=request.intent)
+            return elicit_slot('Sex', speech_output, updated_intent=request.intent)
     else:
         try:
             if dogName == dogFromDynamoDB[DOG_NAME]:
@@ -291,14 +294,14 @@ def startTrainingHandler(dogName, sexFromIntent):
                 sex = dogFromDynamoDB[SEX]
             else:
                 printDebug("getting sex from previous dog")
-
                 sex = dogFromDynamoDB[PREVIOUS_DOGS][dogName]
             printDebug("found sex as: {}".format(sex))
             assert sex != UNKNOWN
         except:
             session.attributes[LAST_QUESTION] = SEX_ASKED
             printDebug("Sex is not known. Asking.")
-            return delegate()
+            request.intent.slots.Dog.value=dogName
+            return delegate(updated_intent=request.intent)
 
     printDebug("Sex finally known: {}".format(sex))
 
